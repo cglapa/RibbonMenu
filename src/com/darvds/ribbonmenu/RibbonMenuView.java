@@ -25,6 +25,7 @@ public class RibbonMenuView extends LinearLayout {
 	private ListView rbmListView;
 	private View rbmOutsideView;
 	private iRibbonMenuCallback callback;
+	private OnRibbonChangeListener listener;
 	
 	private static ArrayList<RibbonMenuItem> menuItems;
 	
@@ -74,6 +75,10 @@ public class RibbonMenuView extends LinearLayout {
 		});
 	}
 	
+	public void setListener(OnRibbonChangeListener listener) {
+		this.listener = listener;
+	}
+	
 	public void setMenuClickCallback(iRibbonMenuCallback callback) {
 		this.callback = callback;
 	}
@@ -94,6 +99,9 @@ public class RibbonMenuView extends LinearLayout {
 		
 		rbmListView.setVisibility(View.VISIBLE);
 		rbmListView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rbm_in_from_left));
+		
+		if(listener != null)
+			listener.onRibbonOpen();
 	}
 	
 	public void hideMenu() {
@@ -101,6 +109,9 @@ public class RibbonMenuView extends LinearLayout {
 		rbmListView.setVisibility(View.GONE);
 		
 		rbmListView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rbm_out_to_left));
+		
+		if(listener != null)
+			listener.onRibbonClose();
 	}
 	
 	public void toggleMenu() {
@@ -108,6 +119,10 @@ public class RibbonMenuView extends LinearLayout {
 			showMenu();
 		else
 			hideMenu();
+	}
+	
+	public boolean isOpen() {
+		return rbmOutsideView.getVisibility() == View.VISIBLE;
 	}
 	
 	private void parseXml(int menu) {
