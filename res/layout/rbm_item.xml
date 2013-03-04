@@ -6,16 +6,15 @@
     android:paddingTop="@dimen/rbm_item_padding_topbottom"
     android:paddingBottom="@dimen/rbm_item_padding_topbottom"
     android:paddingLeft="@dimen/rbm_item_padding_leftright"
-    android:paddingRight="@dimen/rbm_item_padding_leftright" >
+    android:paddingRight="@dimen/rbm_item_padding_leftright">
     
     <ImageView
         android:id="@+id/rbm_item_icon"
         android:layout_height="@dimen/rbm_item_image_height"
         android:layout_width="@dimen/rbm_item_image_width"
-        android:scaleType="fitCenter"
-         />
+        android:scaleType="fitCenter" />
     
-    <TextView         
+    <TextView
         android:id="@+id/rbm_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +23,6 @@
         android:layout_gravity="center_vertical"
         android:paddingLeft="@dimen/rbm_item_text_padding_left"
         android:singleLine="true"
-        android:ellipsize="end"/>
-    
-
+        android:ellipsize="end" />
+	
 </LinearLayout>
