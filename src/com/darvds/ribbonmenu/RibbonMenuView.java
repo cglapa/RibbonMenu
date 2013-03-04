@@ -26,6 +26,7 @@ public class RibbonMenuView extends LinearLayout {
 	private View rbmOutsideView;
 	private iRibbonMenuCallback callback;
 	private OnRibbonChangeListener listener;
+	private int activePosition = -1;
 	
 	private static ArrayList<RibbonMenuItem> menuItems;
 	
@@ -67,12 +68,31 @@ public class RibbonMenuView extends LinearLayout {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				setActivePosition(position);
+				
 				if(callback != null)
 					callback.RibbonMenuItemClick(menuItems.get(position).id);
 				
 				hideMenu();
 			}
 		});
+	}
+	
+	private void setActivePosition(int position) {
+		if(activePosition != -1)
+			rbmListView.getChildAt(activePosition).setBackgroundResource(R.color.rbm_menu_background);
+		rbmListView.getChildAt(position).setBackgroundResource(R.color.rbm_active_item_background);
+		activePosition = position;
+	}
+	
+	public void setActiveItem(int itemId) {
+		int size = menuItems.size();
+		for(int i = 0; i < size; i++) {
+			if(menuItems.get(i).id == itemId) {
+				setActivePosition(i);
+				break;
+			}
+		}
 	}
 	
 	public void setListener(OnRibbonChangeListener listener) {
@@ -177,6 +197,8 @@ public class RibbonMenuView extends LinearLayout {
 	    SavedState ss = (SavedState)state;
 	    super.onRestoreInstanceState(ss.getSuperState());
 	    
+	    activePosition = ss.activePosition;
+	    
 	    if (ss.bShowMenu)
 	        showMenu();
 	    else
@@ -189,12 +211,14 @@ public class RibbonMenuView extends LinearLayout {
 	    SavedState ss = new SavedState(superState);
 
 	    ss.bShowMenu = isMenuVisible();
+	    ss.activePosition = activePosition;
 
 	    return ss;
 	}
 	
 	static class SavedState extends BaseSavedState {
 	    boolean bShowMenu;
+	    int activePosition;
 
 	    SavedState(Parcelable superState) {
 	        super(superState);
@@ -202,13 +226,19 @@ public class RibbonMenuView extends LinearLayout {
 	    
 	    private SavedState(Parcel in) {
 	        super(in);
-	        bShowMenu = (in.readInt() == 1);
+	        int[] saved = new int[2];
+	        in.readIntArray(saved);
+	        bShowMenu = (saved[0] == 1);
+	        activePosition = saved[1];
 	    }
 	    
 	    @Override
 	    public void writeToParcel(Parcel out, int flags) {
 	        super.writeToParcel(out, flags);
-	        out.writeInt(bShowMenu ? 1 : 0);
+	        int[] write = new int[2];
+	        write[0] = (bShowMenu ? 1 : 0);
+	        write[1] = activePosition;
+	        out.writeIntArray(write);
 	    }
 	    
 	    public static final Parcelable.Creator<SavedState> CREATOR
@@ -257,6 +287,9 @@ public class RibbonMenuView extends LinearLayout {
 			
 			if(convertView == null || convertView instanceof TextView) {
 				convertView = inflater.inflate(R.layout.rbm_item, null);
+				
+				if(position == activePosition)
+					convertView.setBackgroundResource(R.color.rbm_active_item_background);
 				
 				holder = new ViewHolder();
 				holder.image = (ImageView) convertView.findViewById(R.id.rbm_item_icon);
