@@ -141,10 +141,6 @@ public class RibbonMenuView extends LinearLayout {
 			hideMenu();
 	}
 	
-	public boolean isOpen() {
-		return rbmOutsideView.getVisibility() == View.VISIBLE;
-	}
-	
 	private void parseXml(int menu) {
 		menuItems = new ArrayList<RibbonMenuView.RibbonMenuItem>();
 		
